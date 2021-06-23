@@ -47,7 +47,8 @@
       var step = 0 ;
       function frame(){
         while (step <= 1000){
-            acc = -g/L*Math.sin(theta)
+            step += 1 ;
+            acc = -g/L*Math.sin(theta) ;
             vel_new = vel + delta_time*acc;
             theta_new = theta + vel*delta_time + (1/2)*acc*(delta_time**2);
             elem.style.top = L*Math.cos(theta);
