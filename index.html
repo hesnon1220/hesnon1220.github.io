@@ -40,11 +40,11 @@
       var pos = 0;
       var id = setInterval(frame,5);
       function frame(){
-        if (pos == 350) {
+        if (pos == 400) {
           clearInterval(id);
         } else {
           pos++;
-          elem.style.top = (pos-350/2)**2 + "px"; 
+          elem.style.top = (pos-200)**2/100 + "px"; 
           elem.style.left = pos + "px"; 
         }
       }
