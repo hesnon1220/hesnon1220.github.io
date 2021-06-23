@@ -10,3 +10,9 @@
     position: absolute;
     background: red;
 } 
+#animate_ball {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #fbff00;
+}
