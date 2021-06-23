@@ -9,8 +9,25 @@
     <h1>覺得厲害</h1>
     <h2>我的第一部js動畫</h2>
     <div id = "animation">動畫在這裡</div>
+    <p><button onclick="myMove()">點擊我</button></p> 
     <div id = "container">
       <div id = "animate"></div>
     </div>
   </body>
+  <script>
+    function myMove() {
+      var elem = document.getElementById("animate");   
+      var pos = 0;
+      var id = setInterval(frame, 5);
+      function frame() {
+        if (pos == 350) {
+          clearInterval(id);
+        } else {
+          pos++; 
+          elem.style.top = pos + "px"; 
+          elem.style.left = pos + "px"; 
+        }
+      }
+    }
+  </script>
 </html>
