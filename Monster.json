@@ -1,0 +1,1 @@
+[{"name": "\u4eba\u985e", "type": "Monster", "ability": {"STR": "3D6*5", "CON": "3D6*5", "SIZ": "3D6*5", "DEX": "3D6*5", "INT": "3D6*5", "POW": "3D6*5"}, "life": 15, "DB": "1D4+2", "build": 2, "mp": 5, "mov": {"\u884c\u8d70": 8}, "attack times": 1, "armor": 0, "skill": {"\u624b\u69cd": 40}, "san loss": {}, "remarks": {}}]
