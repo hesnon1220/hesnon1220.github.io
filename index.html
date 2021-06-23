@@ -15,7 +15,7 @@
     </div>
     <h3>test</h3>
     <p><button onclick="ball_move()">點擊我</button></p>
-    <div class = "container" id ="container">
+    <div class = "large_container" id ="large_container">
       <div class = "animate_ball" id = "animate_ball"></div>
     </div>
   </body>
@@ -37,17 +37,25 @@
     }
     function ball_move(){
       var elem = document.getElementById("animate_ball");
-      var pos = 0;
       var id = setInterval(frame,5);
+      var L = 250;
+      var theta = Math.PI;
+      var vel = 0;
+      var delta_time = 10**-5;
+      var acc = 0;
+      var g = 9.8;
+      var step = 0 ;
       function frame(){
-        if (pos == 400) {
-          clearInterval(id);
-        } else {
-          pos++;
-          elem.style.top = (pos-200)**2/100 + "px"; 
-          elem.style.left = pos + "px"; 
+        while (step <= 1000){
+            acc = -g/L*Math.sin(theta)
+            vel_new = vel + delta_time*acc;
+            theta_new = theta + vel*delta_time + (1/2)*acc*(delta_time**2);
+            elem.style.top = L*Math.cos(theta);
+            elem.style.top = L*Math.sin(theta);
         }
+        clearInterval(id);
       }
     }
+
   </script>
 </html>
