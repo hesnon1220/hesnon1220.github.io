@@ -1,0 +1,21 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <body>
+        <svg id="s" xmlns="http://www.w3.org/2000/svg"/>
+        <p><button onclick="ball_move()">點擊我</button></p>
+    </body>
+    <script type="text/javascript">
+        function makeSVG(tag, attrs) {
+            var el= document.createElementNS('http://www.w3.org/2000/svg', tag);
+            for (var k in attrs)
+                el.setAttribute(k, attrs[k]);
+            return el;
+        }
+
+        var circle= makeSVG('circle', {cx: 100, cy: 50, r:40, stroke: 'black', 'stroke-width': 2, fill: 'red'});
+        document.getElementById('s').appendChild(circle);
+        function ball_move(){
+            var new_circle= makeSVG('circle', {cx: 200, cy: 10, r:40, stroke: 'black', 'stroke-width': 2, fill: 'red'});
+            document.getElementById('s').removeChild(circle);
+            document.getElementById('s').appendChild(new_circle);
+        }
+    </script>

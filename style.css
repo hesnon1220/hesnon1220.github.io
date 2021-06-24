@@ -4,12 +4,7 @@
     position: relative;
     background: yellow;
 }
-.large_container {
-    width: 1000px;
-    height: 1000px;
-    position: relative;
-    background: yellow;
-}
+
 .animate {
     width: 50px;
     height: 50px;
@@ -22,6 +17,42 @@
     border-radius: 50%;
     position: absolute;
     background-color: #000000;
-    top: 0px;
-    left: 750px; 
+}
+.statu_text {
+    position: absolute;
+    font-size:160%;
+}
+.large_container {
+    position: relative;
+    background: rgb(177, 177, 177);
+}
+.line{
+    stroke:red;
+    stroke-width:5;
+    position: absolute;
+}
+.setting{
+    width: min-content;
+    height: min-content;
+    position:relative;
+    border: solid black;
+    margin: 10px;
+    background: rgb(214, 214, 214);
+}
+.canvas{
+    position:relative;
+    border: solid black;
+    margin: 10px;
+    background: rgb(177, 177, 177);
+}
+.body{
+    width: fit-content;
+    height: 90%;
+    align-self: center;
+    display:flex;
+}
+.form{
+    font-size: 20pt;
+    font:small-caps bold 24px/1 sans-serif;
+    margin: 10px;
 }

@@ -16,13 +16,15 @@
     <h3>test</h3>
     <p><button onclick="ball_move()">點擊我</button></p>
     <div class = "large_container" id ="large_container">
+      <p id = "ex"></p>
       <div class = "animate_ball" id = "animate_ball"></div>
+      <div class = "statu_text" id = "statu_text"></div>
     </div>
   </body>
 
   <script>
     function myMove() {
-      var elem = document.getElementById("animate");   
+      var elem = document.getElementById("animate");
       var pos = 0;
       var id = setInterval(frame, 5);
       function frame() {
@@ -32,29 +34,45 @@
           pos++; 
           elem.style.top = pos + "px"; 
           elem.style.left = pos + "px"; 
+          document.getElementById("ex").innerHTML = pos;
         }
       }
     }
     function ball_move(){
       var elem = document.getElementById("animate_ball");
+      var text_elem = document.getElementById("statu_text");
       var id = setInterval(frame,5);
       var L = 250;
-      var theta = Math.PI;
+      var theta = max_statu = Math.PI/2;
       var vel = 0;
-      var delta_time = 10**-5;
+      var delta_time = 10**-2;
       var acc = 0;
-      var g = 9.8;
+      var g = 9.80665;
       var step = 0 ;
+      elem.style.top = 500 + L*Math.cos(theta) + "px" ;
+      elem.style.left = 500 + L*Math.sin(theta) + "px" ;
       function frame(){
-        while (step <= 1000){
-            step += 1 ;
-            acc = -g/L*Math.sin(theta) ;
-            vel_new = vel + delta_time*acc;
-            theta_new = theta + vel*delta_time + (1/2)*acc*(delta_time**2);
-            elem.style.top = L*Math.cos(theta);
-            elem.style.top = L*Math.sin(theta);
+        if (step == 5000){
+          clearInterval(id);
+        }else{
+          step ++ ;
+          acc = -g/L*Math.sin(theta) ;
+          vel_new = vel + delta_time*acc;
+          theta_new = theta + vel*delta_time + (1/2)*acc*(delta_time**2);
+          if (theta_new > max_statu){
+            theta_new = max_statu ;
+            vel_new = 0;
+          }
+          elem.style.top = 500 + L*Math.cos(theta_new) + "px" ;
+          elem.style.left = 500 + L*Math.sin(theta_new) + "px" ;
+          text_elem.style.top = 500 + L*Math.cos(theta_new) + 10 + "px" ;
+          text_elem.style.left = 500 + L*Math.sin(theta_new) + 10 + "px" ;
+          vel = vel_new ;
+          theta = theta_new ;
+          document.getElementById("ex").innerHTML = step;
+          text_elem.innerHTML = '['+L*Math.sin(theta_new)+','+L*Math.cos(theta_new)+']';
         }
-        clearInterval(id);
+        
       }
     }
 

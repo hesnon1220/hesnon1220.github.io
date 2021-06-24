@@ -1,0 +1,259 @@
+<html>
+ <head>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script type="application/javascript">
+    function ini_draw() {
+        var canvas = document.getElementById("canvas");
+        ctx = canvas.getContext("2d");
+        init_env();
+    }
+  </script>
+ </head>
+ <body class = "body" onload="ini_draw();" >
+    <div class = "setting" name = "setting">
+        <form class = "form">
+            theta_1 ：<input class = "form" id = "theta_1" type="text" name="theta_1" value="90"><br>
+            theta_2 ：<input class = "form" id = "theta_2" type="text" name="theta_2" value="90"><br>
+            length_1 :<input class = "form" id = "length_1" type="text" name="length_1" value="200"><br>
+            length_2 :<input class = "form" id = "length_2" type="text" name="length_2" value="200"><br>
+            mass_1 :<input class = "form" id = "mass_1" type="text" name="mass_1" value="1"><br>
+            mass_2 :<input class = "form" id = "mass_2" type="text" name="mass_2" value="1"><br>
+            delta_time :<input class = "form" id = "delta_time" type="text" name="delta_time" value="0.1"><br>
+            radius :<input class = "form" id = "radius" type="text" name="radius" value="5"><br>
+        </form>
+        <select class = "form" id = "mode" name="mode">
+            <option class = "form" value="None" selected>選擇模式</option>
+            <option class = "form" value="draw">draw</option>
+            <option class = "form" value="view">view</option>
+        </select>
+        <button class = "form" onclick="set_init_value();">開始</button>
+    </div>
+    <canvas class = "canvas" id="canvas" width="1000" height="1000" ></canvas>
+ </body>
+ <script>
+    function stop(){
+        try{
+            window.cancelAnimationFrame(raf);
+        }
+        catch{;}
+    }
+
+    function set_init_value(){
+        if (document.getElementById("theta_1").value == "" ||
+        document.getElementById("theta_2").value == "" ||
+        document.getElementById("length_1").value == "" ||
+        document.getElementById("length_2").value == "" ||
+        document.getElementById("mass_1").value == "" ||
+        document.getElementById("mass_2").value == "" ||
+        document.getElementById("delta_time").value == "" ||
+        document.getElementById("mode").value == "None"
+        ) {return}
+
+
+        stop();
+        init_env();
+        ctx.font = '24px serif';
+        try{
+            var theta_source_1 = parseFloat(document.getElementById("theta_1").value)/180*Math.PI;
+            var theta_source_2 = parseFloat(document.getElementById("theta_2").value)/180*Math.PI;
+            var length_source_1 = parseFloat(document.getElementById("length_1").value) ;
+            var length_source_2 = parseFloat(document.getElementById("length_2").value) ;
+            var mass_source_1 = parseFloat(document.getElementById("mass_1").value);
+            var mass_source_2 = parseFloat(document.getElementById("mass_2").value);
+            var delta_time_source = parseFloat(document.getElementById("delta_time").value);
+            var radius = parseFloat(document.getElementById("radius").value) ;
+        }
+        catch{;}
+
+        var ball_1 = {
+            cx : 500,
+            cy : 500,
+            length: length_source_1,
+            m: mass_source_1,
+            delta_time : delta_time_source,
+            theta : theta_source_1 ,
+            x: length_source_1*Math.sin(theta_source_1),
+            y: length_source_1*Math.cos(theta_source_1),
+            g : 9.80665,
+            vel : 0,
+            radius: radius,
+            color: 'green',
+            draw_ball: function() {
+                ctx.beginPath();
+                ctx.arc(this.cx+this.x, this.cy+this.y, this.radius, 0, Math.PI * 2, true);
+                ctx.closePath();
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                //ctx.fillText(Math.round((this.theta/Math.PI*180)%360*10)/10,this.cx+this.x+10 , this.cy+this.y+10);
+            }
+        };
+
+        var ball_2 = {
+            cx : ball_1.cx+ball_1.x,
+            cy : ball_1.cy+ball_1.y,
+            length: length_source_2,
+            m: mass_source_2,
+            delta_time : delta_time_source,
+            theta : theta_source_2 ,
+            x: length_source_2*Math.sin(theta_source_2),
+            y: length_source_2*Math.cos(theta_source_2),
+            g : 9.80665,
+            vel : 0,
+            radius: radius,
+            color: 'blue',
+            draw_ball: function() {
+                ctx.beginPath();
+                ctx.arc(this.cx+this.x, this.cy+this.y, this.radius, 0, Math.PI * 2, true);
+                ctx.closePath();
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                //ctx.fillText(Math.round((this.theta/Math.PI*180)%360*10)/10,this.cx+this.x+10 , this.cy+this.y+10);
+            }
+        };
+
+        var bar_1 = {
+            start_x : ball_1.cx ,
+            start_y : ball_1.cy ,
+            end_x : ball_1.cx+ball_1.x ,
+            end_y : ball_1.cy+ball_1.y ,
+            draw_bar: function(){
+                ctx.strokeStyle = "rgba(0,0,0,1)";
+                ctx.beginPath();
+                ctx.moveTo(ball_1.cx,ball_1.cy);
+                ctx.lineTo(ball_1.cx+ball_1.x,ball_1.cy+ball_1.y);
+                ctx.stroke();
+            }
+        };
+
+        var bar_2 = {
+            start_x : ball_2.cx ,
+            start_y : ball_2.cy ,
+            end_x : ball_2.cx+ball_2.x ,
+            end_y : ball_2.cy+ball_2.y ,
+            draw_bar: function(){
+                ctx.strokeStyle = "rgba(0,0,0,1)";
+                ctx.beginPath();
+                ctx.moveTo(ball_2.cx,ball_2.cy);
+                ctx.lineTo(ball_2.cx+ball_2.x,ball_2.cy+ball_2.y);
+                ctx.stroke();
+            }
+        };
+        function repeat() {
+            draw();
+            matrixA = [
+                (ball_1.m+ball_2.m)*ball_1.length , ball_2.m*ball_2.length*Math.cos(ball_1.theta-ball_2.theta),
+                ball_2.m*ball_1.length*Math.cos(ball_1.theta-ball_2.theta) , ball_2.m*ball_2.length
+            ];
+            matrixB = [
+                (ball_1.m+ball_2.m)*ball_1.g*Math.sin(ball_1.theta) , ball_2.m*ball_2.length*(ball_2.vel**2)*Math.sin(ball_1.theta-ball_2.theta),
+                ball_2.m*ball_1.length*(ball_1.vel**2)*Math.sin(ball_2.theta-ball_1.theta) , ball_2.m*ball_2.g*Math.sin(ball_2.theta)
+            ];
+            point = [-1,-1];
+            
+            acc_point = multiplyMatrixAndPoint(multiplyMatrices(matrix_invers(matrixA),matrixB),point);
+            
+            acc_1 = acc_point[0] ;
+            acc_2 = acc_point[1] ;
+
+            vel_new_1 = ball_1.vel + ball_1.delta_time*acc_1 ;
+            vel_new_2 = ball_2.vel + ball_2.delta_time*acc_2 ;
+            theta_new_1 = ball_1.theta + ball_1.vel*ball_1.delta_time + (1/2)*acc_1*(ball_1.delta_time**2);
+            theta_new_2 = ball_2.theta + ball_2.vel*ball_2.delta_time + (1/2)*acc_2*(ball_2.delta_time**2);
+
+            ball_1.x = ball_1.length*Math.sin(theta_new_1) ;
+            ball_1.y = ball_1.length*Math.cos(theta_new_1) ;
+            ball_2.x = ball_2.length*Math.sin(theta_new_2) ;
+            ball_2.y = ball_2.length*Math.cos(theta_new_2) ;
+
+            ball_1.vel = vel_new_1 ;
+            ball_1.theta = theta_new_1 ;
+            ball_2.vel = vel_new_2 ;
+            ball_2.theta = theta_new_2 ;
+
+            ball_2.cx = ball_1.cx+ball_1.x;
+            ball_2.cy = ball_1.cy+ball_1.y;
+
+            raf = window.requestAnimationFrame(repeat);
+        }
+        function draw(){
+            if (document.getElementById("mode").value == "view"){
+                ctx.fillStyle = 'rgba(150,150,150,1)';
+                ctx.fillRect (0, 0, canvas.width, canvas.height);
+            } else if (document.getElementById("mode").value == "draw"){
+                ctx.fillStyle = 'rgba(150,150,150,0)';
+                ctx.fillRect (0, 0, canvas.width, canvas.height);
+            }
+            coordinates();
+            if (document.getElementById("mode").value == "view"){
+                bar_1.draw_bar();
+                bar_2.draw_bar();
+            }
+
+            ball_1.draw_ball();
+            ball_2.draw_ball();
+        }
+
+        draw();
+        raf = window.requestAnimationFrame(repeat);
+    }
+
+    function init_env(){
+        ctx.fillStyle = 'rgba(150,150,150,1)';
+        ctx.fillRect (0, 0, canvas.width, canvas.height);
+        coordinates();
+    }
+
+
+    function coordinates(){
+            ctx.strokeStyle = 'rgba(255,255,255,1)';
+            ctx.beginPath();
+            for (i=0;i<10;i++) {
+                ctx.moveTo(0,100*i);
+                ctx.lineTo(1000,100*i);
+                ctx.moveTo(100*i,0);
+                ctx.lineTo(100*i,1000);
+            }
+            ctx.stroke();
+    }
+    function multiplyMatrixAndPoint(matrix, point) {
+
+        var c0r0 = matrix[0], c1r0 = matrix[1];
+        var c0r1 = matrix[2], c1r1 = matrix[3];
+
+
+        var x = point[0];
+        var y = point[1];
+
+        var resultX = (x * c0r0) + (y * c1r0);
+        var resultY = (x * c0r1) + (y * c1r1);
+
+        return [resultX, resultY]
+    }
+
+
+
+    function multiplyMatrices(matrixA, matrixB) {
+        var column0 = [matrixB[0], matrixB[2]];
+        var column1 = [matrixB[1], matrixB[3]];
+
+        var result0 = multiplyMatrixAndPoint( matrixA, column0 );
+        var result1 = multiplyMatrixAndPoint( matrixA, column1 );
+
+        return [
+        result0[0], result1[0],
+        result0[1], result1[1]
+        ]
+    }
+
+    function matrix_invers(matrix){
+        matrix_det = matrix[0]*matrix[3]-matrix[1]*matrix[2]
+        if (matrix_det == 0){
+            matrix_det = (matrix[0]+10**-5)*(matrix[3]+10**-5)-matrix[1]*matrix[2]
+        }
+        return [
+        matrix[3]/matrix_det,-matrix[1]/matrix_det,
+        -matrix[2]/matrix_det,matrix[0]/matrix_det
+        ]
+    }
+ </script>
+</html>

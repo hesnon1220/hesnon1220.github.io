@@ -1,0 +1,93 @@
+<html>
+ <head>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script type="application/javascript">
+    function ini_draw() {
+      var canvas = document.getElementById("canvas");
+    }
+  </script>
+ </head>
+ <body onload="ini_draw();">
+    <p><button onclick="set_init_value();">點擊我</button></p>
+    <canvas class = large_container id="canvas" width="1000" height="1000" ></canvas>
+ </body>
+ <script>
+    function set_init_value(){
+        var ctx = canvas.getContext("2d");
+        var raf;
+
+
+        var ball = {
+            cx : 500,
+            cy : 500,
+            x: 250,
+            y: 0,
+            length: 250,
+            delta_time : 10**-1,
+            g : 9.80665,
+            vel : 0,
+            theta : Math.PI/2 ,
+            max_statu : Math.PI/2 ,
+            radius: 10,
+            color: 'blue',
+            draw_ball: function() {
+                ctx.beginPath();
+                ctx.arc(this.cx+this.x, this.cy+this.y, this.radius, 0, Math.PI * 2, true);
+                ctx.closePath();
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        };
+
+        var bar = {
+            start_x : 500 ,
+            start_y : 500 ,
+            end_x : 750 ,
+            end_y : 500 ,
+            draw_bar: function(){
+                ctx.strokeStyle = "rgba(0,0,0,1)";
+                ctx.beginPath();
+                ctx.moveTo(this.start_x,this.start_y);
+                ctx.lineTo(this.end_x,this.end_y);
+                ctx.stroke();
+            }
+        };
+        function draw() {
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.strokeStyle = "rgba(255,255,255,1)";
+            ctx.beginPath();
+            ctx.moveTo(0,500);
+            ctx.lineTo(1000,500,'red');
+            ctx.moveTo(500,0);
+            ctx.lineTo(500,1000);
+            ctx.stroke();
+
+            bar.draw_bar();
+            ball.draw_ball();
+
+            acc = -ball.g/ball.length*Math.sin(ball.theta) ;
+            vel_new = ball.vel + ball.delta_time*acc;
+            theta_new = ball.theta + ball.vel*ball.delta_time + (1/2)*acc*(ball.delta_time**2);
+            ball.x = ball.length*Math.sin(theta_new) ;
+            ball.y = ball.length*Math.cos(theta_new) ;
+            bar.end_x = ball.cx + ball.x;
+            bar.end_y = ball.cy + ball.y;
+            ball.vel = vel_new ;
+            ball.theta = theta_new ;
+
+            raf = window.requestAnimationFrame(draw);
+        }
+        bar.draw_bar();
+        ball.draw_ball();
+        canvas.addEventListener('mouseover', function(e) {
+            raf = window.requestAnimationFrame(draw);
+        });
+
+        canvas.addEventListener('mouseout', function(e) {
+            window.cancelAnimationFrame(raf);
+        });
+      }
+ </script>
+</html>
